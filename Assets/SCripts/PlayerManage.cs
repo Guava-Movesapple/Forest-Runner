@@ -4,21 +4,24 @@ using UnityEngine;
 
 public class PlayerManage : MonoBehaviour
 {
-    public float playerSpeed = 0.9f;
+    public float laneSpeed = 0.9f;
+    public float playerSpeed = 17f;
     public float jumpSpeed = 6;
     public float rollSpeed = 6;
     public Rigidbody rb;
-    private int lane = 0;
+    public int lane = 0;
     private bool isGrounded = true;
     public Animator animator;
     private CapsuleCollider col;
     private float rollTimer = 0;
     public bool isAlive;
-    private Vector3 move = new Vector3(0,0,0);
+    private RaycastHit hit;
+
 
     // Start is called before the first frame update
     void Start()
     {
+
         isAlive = true;
         rb = GetComponent<Rigidbody>(); 
         animator = GetComponent<Animator>(); 
@@ -28,7 +31,7 @@ public class PlayerManage : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-      
+        transform.Translate(Vector3.forward * 4 *Time.deltaTime, Space.Self);
    
         if (Input.GetKeyDown(KeyCode.A) && lane > -1)
         {
@@ -42,21 +45,18 @@ public class PlayerManage : MonoBehaviour
 
         if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W)) && isGrounded)
         {
-            rb.velocity = Vector3.up * jumpSpeed;
+            rb.AddForce(Vector3.up * jumpSpeed,ForceMode.Impulse);
         }
 
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.S) && !animator.GetBool("isRolling"))
         {
-            move += Vector3.down * jumpSpeed;
+            rb.AddForce( Vector3.down * jumpSpeed, ForceMode.Impulse);
             animator.SetBool("isRolling", true);
-            rollTimer = 0.77f;
+            rollTimer = 0.9f;
             col.height = 0.9f;
             col.center = new Vector3(col.center.x,0.5f,col.center.z); 
         }
-        else
-        {
-            animator.SetBool("isRolling",false);
-        }
+
 
         if(rollTimer > 0)
         {
@@ -65,20 +65,20 @@ public class PlayerManage : MonoBehaviour
             {
                 col.height = 1.651325f;
                 col.center = new Vector3(col.center.x, 0.8464648f, col.center.z);
+                animator.SetBool("isRolling",false);
             }
         }
 
-     
+      
 
     }
 
     private void FixedUpdate()
     {
-        if (transform.position.x != lane * 5)
-        {
-            changeLane();
-        }
-        isGrounded = Physics.Raycast(transform.position + Vector3.up , Vector3.down, 1.1f);
+        rb.AddForce((Vector3.ProjectOnPlane(transform.forward,hit.normal).normalized * playerSpeed) - rb.velocity);
+
+        changeLane();
+        isGrounded = Physics.Raycast(transform.position + Vector3.up , Vector3.down,out hit, 1.1f);
         animator.SetBool("IsJumping", !isGrounded);
 
 
@@ -88,15 +88,15 @@ public class PlayerManage : MonoBehaviour
         switch (lane)
         {
             case -1:
-                transform.position=Vector3.MoveTowards(transform.position, new Vector3(-5, transform.position.y, transform.position.z), playerSpeed);
+                transform.position=Vector3.MoveTowards(transform.position, new Vector3(-5, transform.position.y, transform.position.z), laneSpeed);
                 break;
 
             case -0:
-                transform.position = Vector3.MoveTowards(transform.position, new Vector3(0, transform.position.y, transform.position.z), playerSpeed);
+                transform.position = Vector3.MoveTowards(transform.position, new Vector3(0, transform.position.y, transform.position.z), laneSpeed);
                 break;
 
             case 1:
-                transform.position = Vector3.MoveTowards(transform.position, new Vector3(5, transform.position.y, transform.position.z), playerSpeed);
+                transform.position = Vector3.MoveTowards(transform.position, new Vector3(5, transform.position.y, transform.position.z), laneSpeed);
                 break;
         }
     }
