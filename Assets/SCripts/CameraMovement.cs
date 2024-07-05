@@ -7,6 +7,7 @@ public class CameraMovement : MonoBehaviour
 {
     public GameObject playerObject;
     private Vector3 position;
+    public float laneChangeSpeed = 0.5f;
    
 
     // Start is called before the first frame update
@@ -19,7 +20,7 @@ public class CameraMovement : MonoBehaviour
     void Update()
     {   
         position = transform.position;
-        position.z = playerObject.transform.position.z - 13f;
+        position.z = playerObject.transform.position.z - 6.10619f;
         transform.position = position;
         changeLane();
     }
@@ -29,15 +30,15 @@ public class CameraMovement : MonoBehaviour
         switch (playerObject.GetComponent<PlayerManage>().lane)
         {
             case -1:
-                transform.position = Vector3.MoveTowards(transform.position, new Vector3(-3.3f, transform.position.y, transform.position.z), 0.5f);
+                transform.position = Vector3.MoveTowards(transform.position, new Vector3(-3.3f, transform.position.y, transform.position.z), laneChangeSpeed);
                 break;
 
             case 0:
-                transform.position = Vector3.MoveTowards(transform.position, new Vector3(0, transform.position.y, transform.position.z), 0.5f);
+                transform.position = Vector3.MoveTowards(transform.position, new Vector3(0, transform.position.y, transform.position.z), laneChangeSpeed);
                 break;
 
             case 1:
-                transform.position = Vector3.MoveTowards(transform.position, new Vector3(3.3f, transform.position.y, transform.position.z), 0.5f);
+                transform.position = Vector3.MoveTowards(transform.position, new Vector3(3.3f, transform.position.y, transform.position.z), laneChangeSpeed);
                 break;
         }
     }
