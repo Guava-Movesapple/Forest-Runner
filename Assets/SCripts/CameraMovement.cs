@@ -22,6 +22,24 @@ public class CameraMovement : MonoBehaviour
         position = transform.position;
         position.z = playerObject.transform.position.z - 6.10619f;
         transform.position = position;
+
+
+
+
+    }
+
+
+    private void FixedUpdate()
+    {
+        if (playerObject.transform.position.y > 0 && playerObject.GetComponent<PlayerManage>().isGrounded)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, new Vector3(transform.position.x, 9, transform.position.z), 0.06f);
+        }
+        else if (playerObject.transform.position.y < 3.85f)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, new Vector3(transform.position.x, 6, transform.position.z), 0.6f);
+        }
+
         changeLane();
     }
 

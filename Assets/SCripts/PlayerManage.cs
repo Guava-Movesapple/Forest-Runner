@@ -10,7 +10,7 @@ public class PlayerManage : MonoBehaviour
     public float rollSpeed = 6;
     public Rigidbody rb;
     public int lane = 0;
-    private bool isGrounded = true;
+    public bool isGrounded = true;
     public Animator animator;
     private CapsuleCollider col;
     private float rollTimer = 0;
@@ -33,9 +33,7 @@ public class PlayerManage : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        logic.GetComponent<LogicManagerScript>().coinIncrease();
 
-        transform.Translate(Vector3.forward * 4 *Time.deltaTime, Space.Self);
    
         if (Input.GetKeyDown(KeyCode.A) && lane > -1 && isAlive)
         {
@@ -49,12 +47,17 @@ public class PlayerManage : MonoBehaviour
 
         if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W)) && isGrounded && isAlive)
         {
+            animator.SetBool("isRolling", false);
             rb.AddForce(Vector3.up * jumpSpeed,ForceMode.Impulse);
         }
 
         if (Input.GetKeyDown(KeyCode.S) && !animator.GetBool("isRolling") && isAlive)
         {
-            rb.AddForce( Vector3.down * jumpSpeed, ForceMode.Impulse);
+
+            if (!isGrounded)
+            {
+                rb.AddForce(Vector3.down * jumpSpeed, ForceMode.Impulse);
+            }
             animator.SetBool("isRolling", true);
             rollTimer = 1.150f;
             col.height = 0.9f;
@@ -62,10 +65,11 @@ public class PlayerManage : MonoBehaviour
         }
 
 
+
         if(rollTimer > 0)
         {
             rollTimer -= Time.deltaTime;
-            if(rollTimer < 0)
+            if(rollTimer < 0 || animator.GetBool("IsJumping"))
             {
                 col.height = 1.651325f;
                 col.center = new Vector3(col.center.x, 0.8464648f, col.center.z);
@@ -80,8 +84,10 @@ public class PlayerManage : MonoBehaviour
 
     private void FixedUpdate()
     {
-            
-        rb.AddForce((Vector3.ProjectOnPlane(transform.forward,hit.normal).normalized * playerSpeed) - rb.velocity);     
+        if (isAlive)
+        {
+            rb.AddForce((Vector3.ProjectOnPlane(transform.forward, hit.normal).normalized * playerSpeed) - rb.velocity);
+        }
         changeLane();
         isGrounded = Physics.Raycast(transform.position + Vector3.up , Vector3.down,out hit, 1.2f);
         animator.SetBool("IsJumping", !isGrounded);
