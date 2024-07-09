@@ -89,7 +89,7 @@ public class PlayerManage : MonoBehaviour
             rb.AddForce((Vector3.ProjectOnPlane(transform.forward, hit.normal).normalized * playerSpeed) - rb.velocity);
         }
         changeLane();
-        isGrounded = Physics.Raycast(transform.position + Vector3.up , Vector3.down,out hit, 1.2f);
+        isGrounded = Physics.Raycast(transform.position + Vector3.up , Vector3.down,out hit, 1.3f);
         animator.SetBool("IsJumping", !isGrounded);
 
         if(rb.velocity.y < 0 && !isGrounded)
