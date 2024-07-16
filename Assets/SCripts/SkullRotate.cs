@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class SkullRotate : MonoBehaviour
 {
+
+    [SerializeField] float speed;
     // Start is called before the first frame update
     void Start()
     {
@@ -13,6 +15,6 @@ public class SkullRotate : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Rotate(transform.rotation.x, 180 * Time.deltaTime,transform.rotation.z);
+        transform.Rotate(transform.rotation.x, speed * Time.deltaTime,transform.rotation.z);
     }
 }

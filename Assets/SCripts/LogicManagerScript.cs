@@ -19,6 +19,12 @@ public class LogicManagerScript : MonoBehaviour
     [SerializeField] float abilityTimer = 0;
     [SerializeField] float kenTime = 10;
     [SerializeField] float meterFill = 0;
+    public TMP_Text abiltyText;
+    private bool isDeathCalled = false;
+    public GameObject bgm;
+    public GameObject kenSphere;
+    public GameObject pausePanel;
+
 
     
 
@@ -27,6 +33,8 @@ public class LogicManagerScript : MonoBehaviour
     {
         Physics.IgnoreLayerCollision(0, 6, false);
         meter.fillAmount = meterFill;
+        abiltyText.enabled = false;
+        pausePanel.SetActive(false);
 
 
     }
@@ -35,14 +43,26 @@ public class LogicManagerScript : MonoBehaviour
 
     private void Update()
     {
-
-        if(meter.fillAmount == 1)
+        if(Input.GetKeyDown(KeyCode.Q) && player.GetComponent<PlayerManage>().isAlive)
         {
-            Debug.Log("Can use ken");
+            Time.timeScale = (Time.timeScale == 0) ? 1 : 0;
+            pausePanel.SetActive(!pausePanel.activeSelf);
+        }
+
+        if ( !player.GetComponent<PlayerManage>().isAlive && !isDeathCalled)
+        {
+
+            OnDeath();
+        }
+
+        if (meter.fillAmount == 1)
+        {
+            abiltyText.enabled = true;
         }
         if (meter.fillAmount == 1 && Input.GetKeyDown(KeyCode.E) && !isUsingKen)
         {
             isUsingKen = true;
+            kenSphere.SetActive(true);
             Physics.IgnoreLayerCollision(0, 6, true);
             abilityTimer = kenTime;
         }
@@ -83,7 +103,16 @@ public class LogicManagerScript : MonoBehaviour
             meter.fillAmount = 0;
             meterFill = 0;
             isUsingKen = false;
+            kenSphere.SetActive(false);
+            abiltyText.enabled = false;
         }
+    }
+
+    void OnDeath()
+    {
+        isDeathCalled = true;
+        GetComponent<AudioSource>().Play();
+        bgm.GetComponent<AudioSource>().Stop();
     }
 
 }

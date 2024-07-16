@@ -6,16 +6,17 @@ public class Hand : MonoBehaviour
 {
     [SerializeField] float multiplier;
     [SerializeField] float dist = 6;
+    [SerializeField] int rev = 1;
+    [SerializeField] float speed ;
 
-    // Start is called before the first frame update
-    void Start()
+
+    private void Start()
     {
-        
+        speed = Random.Range(0.5f, 2f);
     }
 
-    // Update is called once per frame
     void Update()
     {
-        transform.position = new Vector3((Mathf.PingPong(Time.time, 1) * multiplier)-dist,transform.position.y,transform.position.z);
+        transform.position = new Vector3(((Mathf.PingPong(Time.time * speed, 1) * multiplier)-dist) * rev,transform.position.y,transform.position.z);
     }
 }

@@ -21,7 +21,7 @@ public class PlayerManage : MonoBehaviour
     private AudioSource coinCollectFX;
     private bool called = false;
     public bool isSneaking = false;
-    public GameObject playerModel;
+    public float deathForce;
 
 
     // Start is called before the first frame update
@@ -96,6 +96,7 @@ public class PlayerManage : MonoBehaviour
     {
         if (collision.gameObject.tag == "Obstacle")
         {
+            rb.AddForce(Vector3.back * deathForce, ForceMode.Impulse);
             isAlive = false;
             animator.SetBool("isAlive", false);
         }
@@ -159,7 +160,7 @@ public class PlayerManage : MonoBehaviour
         if (rollTimer > 0)
         {
             rollTimer -= Time.deltaTime;
-            if (rollTimer < 0 || animator.GetBool("IsJumping"))
+            if (rollTimer < 0 || animator.GetBool("IsJumping") || !isAlive)
             {
                 col.height = 1.651325f;
                 col.center = new Vector3(col.center.x, 0.8464648f, col.center.z);

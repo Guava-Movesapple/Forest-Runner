@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4460705089818907397}
   - component: {fileID: 6279326704509982453}
   - component: {fileID: 6037802889751859770}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Roll Barrier
   m_TagString: Obstacle
   m_Icon: {fileID: 0}
