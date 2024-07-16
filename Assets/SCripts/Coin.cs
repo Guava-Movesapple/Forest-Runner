@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Coin : MonoBehaviour
 {
-    public GameObject soul;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,7 +19,6 @@ public class Coin : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        gameObject.GetComponent<AudioSource>().Play();
-        Destroy(soul);
+        Destroy(gameObject);
     }
 }

@@ -40,7 +40,10 @@ public class CameraMovement : MonoBehaviour
             transform.position = Vector3.MoveTowards(transform.position, new Vector3(transform.position.x, 6, transform.position.z), 0.6f);
         }
 
-        changeLane();
+        if (playerObject.GetComponent<PlayerManage>().isAlive)
+        {
+            changeLane();
+        }
     }
 
     private void changeLane()

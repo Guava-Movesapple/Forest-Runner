@@ -18,6 +18,10 @@ public class PlayerManage : MonoBehaviour
     private RaycastHit hit;
     public float downForce = 1;
     public GameObject logic;
+    private AudioSource coinCollectFX;
+    private bool called = false;
+    public bool isSneaking = false;
+    public GameObject playerModel;
 
 
     // Start is called before the first frame update
@@ -27,57 +31,28 @@ public class PlayerManage : MonoBehaviour
         rb = GetComponent<Rigidbody>(); 
         animator = GetComponent<Animator>(); 
         col = GetComponent<CapsuleCollider>();
+        coinCollectFX = GetComponent<AudioSource>();
+        called = false;
+
 
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (isAlive)
+        {
+            controls();
+        }
 
+        if(isSneaking && Input.anyKeyDown)
+        {
+            isAlive = false;
+            animator.SetBool("isAlive",false);
+
+
+        }
    
-        if (Input.GetKeyDown(KeyCode.A) && lane > -1 && isAlive)
-        {
-            lane--;
-        }
-
-        if (Input.GetKeyDown(KeyCode.D)  && lane < 1 && isAlive)
-        {
-            lane++;             
-        }
-
-        if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W)) && isGrounded && isAlive)
-        {
-            animator.SetBool("isRolling", false);
-            rb.AddForce(Vector3.up * jumpSpeed,ForceMode.Impulse);
-        }
-
-        if (Input.GetKeyDown(KeyCode.S) && !animator.GetBool("isRolling") && isAlive)
-        {
-
-            if (!isGrounded)
-            {
-                rb.AddForce(Vector3.down * jumpSpeed, ForceMode.Impulse);
-            }
-            animator.SetBool("isRolling", true);
-            rollTimer = 1.150f;
-            col.height = 0.9f;
-            col.center = new Vector3(col.center.x,0.5f,col.center.z);
-        }
-
-
-
-        if(rollTimer > 0)
-        {
-            rollTimer -= Time.deltaTime;
-            if(rollTimer < 0 || animator.GetBool("IsJumping"))
-            {
-                col.height = 1.651325f;
-                col.center = new Vector3(col.center.x, 0.8464648f, col.center.z);
-                animator.SetBool("isRolling",false);
-
-            }
-        }
-
 
 
     }
@@ -86,9 +61,9 @@ public class PlayerManage : MonoBehaviour
     {
         if (isAlive)
         {
-            rb.AddForce((Vector3.ProjectOnPlane(transform.forward, hit.normal).normalized * playerSpeed) - rb.velocity);
+            rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, (Vector3.ProjectOnPlane(transform.forward, hit.normal).normalized.z * playerSpeed));
+            changeLane();
         }
-        changeLane();
         isGrounded = Physics.Raycast(transform.position + Vector3.up , Vector3.down,out hit, 1.3f);
         animator.SetBool("IsJumping", !isGrounded);
 
@@ -130,8 +105,75 @@ public class PlayerManage : MonoBehaviour
     {
         if(trigger.gameObject.tag == "Coin")
         {
+            coinCollectFX.Play();
             logic.GetComponent<LogicManagerScript>().coinIncrease();
         }
+        else if (trigger.gameObject.tag == "Enter")
+        {
+            animator.SetBool("isSneaking", true);
+            isSneaking = true;
+            playerSpeed = 8;
+        }
+        else if (trigger.gameObject.tag == "Exit")
+        {
+            animator.SetBool("isSneaking", false);
+            isSneaking = false;
+            playerSpeed = 18;
+        }
+    }
+
+    private void controls()
+    {
+        if (Input.GetKeyDown(KeyCode.A) && lane > -1)
+        {
+            lane--;
+        }
+
+        if (Input.GetKeyDown(KeyCode.D) && lane < 1 )
+        {
+            lane++;
+        }
+
+        if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W)) && isGrounded)
+        {
+            animator.SetBool("isRolling", false);
+            rb.AddForce(Vector3.up * jumpSpeed, ForceMode.Impulse);
+            called = true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.S) && !animator.GetBool("isRolling"))
+        {
+
+            if (!isGrounded)
+            {
+                rb.AddForce(Vector3.down * jumpSpeed, ForceMode.Impulse);
+            }
+            animator.SetBool("isRolling", true);
+            rollTimer = 1.150f;
+            col.height = 0.9f;
+            col.center = new Vector3(col.center.x, 0.5f, col.center.z);
+        }
+
+
+
+        if (rollTimer > 0)
+        {
+            rollTimer -= Time.deltaTime;
+            if (rollTimer < 0 || animator.GetBool("IsJumping"))
+            {
+                col.height = 1.651325f;
+                col.center = new Vector3(col.center.x, 0.8464648f, col.center.z);
+                animator.SetBool("isRolling", false);
+
+            }
+        }
+
+        if (transform.position.y > 3f && called)
+        {
+            called = false;
+            rb.velocity = new Vector3(rb.velocity.x, 2, rb.velocity.z);
+        }
+
     }
 
 }

@@ -38,7 +38,7 @@ public class LevelSpawner : MonoBehaviour
     private void spawn()
     {
 
-        spawnedLevels.Add(Instantiate(levels[Random.Range(0,levels.Count)], nextSpawn,Quaternion.identity));
+        spawnedLevels.Add(Instantiate(levels[RandomLevelGenerator()], nextSpawn,Quaternion.identity));
         nextSpawn += new Vector3(0, 0, spawnOffset);
     }
 
@@ -46,5 +46,18 @@ public class LevelSpawner : MonoBehaviour
     {
         Destroy(spawnedLevels[0]);
         spawnedLevels.RemoveAt(0);
+    }
+
+    int RandomLevelGenerator()
+    {
+        int level = Random.Range(0,levels.Count);
+        if (level == 2)
+        {
+            return Random.Range(0, levels.Count);
+        }
+        else
+        {
+            return level;
+        }
     }
 }

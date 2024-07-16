@@ -193,8 +193,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 906a47ccbbf233949ba241e40853e397, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  laneSpeed: 0.33
   playerSpeed: 0.9
   jumpSpeed: 7
   rollSpeed: 6
   rb: {fileID: 3846598773658348981}
+  lane: 0
+  isGrounded: 1
   animator: {fileID: 5082755156084078374}
+  isAlive: 0
+  downForce: 1
+  logic: {fileID: 0}
+  isSneaking: 0
