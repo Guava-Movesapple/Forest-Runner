@@ -24,6 +24,9 @@ public class LogicManagerScript : MonoBehaviour
     public GameObject bgm;
     public GameObject kenSphere;
     public GameObject pausePanel;
+    public GameObject deathPanel;
+    public float waitSec = 4;
+    public TMP_Text deathScore;
 
 
     
@@ -35,6 +38,7 @@ public class LogicManagerScript : MonoBehaviour
         meter.fillAmount = meterFill;
         abiltyText.enabled = false;
         pausePanel.SetActive(false);
+        deathPanel.SetActive(false);
 
 
     }
@@ -113,6 +117,20 @@ public class LogicManagerScript : MonoBehaviour
         isDeathCalled = true;
         GetComponent<AudioSource>().Play();
         bgm.GetComponent<AudioSource>().Stop();
+        if(PlayerPrefs.GetInt("highscore") < score)
+        {
+            PlayerPrefs.SetInt("highscore", (int) score);
+        }
+        StartCoroutine(enableDeathscreenAfterSec());
+        
+
+    }
+
+    IEnumerator enableDeathscreenAfterSec()
+    {
+        yield return new WaitForSeconds(waitSec);
+        deathPanel.SetActive(true);
+        deathScore.text = "Score: " + (int)score;
     }
 
 }
