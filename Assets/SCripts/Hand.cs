@@ -12,7 +12,7 @@ public class Hand : MonoBehaviour
 
     private void Start()
     {
-        speed = Random.Range(0.5f, 2f);
+        speed = Random.Range(0.5f, 1.6f);
     }
 
     void Update()

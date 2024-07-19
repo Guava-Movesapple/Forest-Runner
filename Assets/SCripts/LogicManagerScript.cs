@@ -93,7 +93,7 @@ public class LogicManagerScript : MonoBehaviour
         coinCollected += 1;
         meterFill += 1;
         coinText.text = coinCollected.ToString();
-        meter.fillAmount = meterFill/100f;
+        meter.fillAmount = meterFill/75f;
     }
 
     private void kenTimer()

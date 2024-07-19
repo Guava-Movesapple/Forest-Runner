@@ -1346,6 +1346,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6659417065348187064}
+  - component: {fileID: 501404212066679679}
   m_Layer: 0
   m_Name: Level 1
   m_TagString: Untagged
@@ -1378,6 +1379,18 @@ Transform:
   - {fileID: 8364085089555121065}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &501404212066679679
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4373800924625496477}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 424f2cbf9a7403d4a99e5500ec5ecdc6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4405276937225969180
 GameObject:
   m_ObjectHideFlags: 0
@@ -4772,11 +4785,38 @@ PrefabInstance:
       propertyPath: m_Name
       value: Souls
       objectReference: {fileID: 0}
+    - target: {fileID: 6786559786275415867, guid: 1d9d7c4a55938e34fbda0b6d098e4e8d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5902448030593261669, guid: 1d9d7c4a55938e34fbda0b6d098e4e8d,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 9048149511224168002}
   m_SourcePrefab: {fileID: 100100000, guid: 1d9d7c4a55938e34fbda0b6d098e4e8d, type: 3}
+--- !u!1 &1030359897084579586 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5902448030593261669, guid: 1d9d7c4a55938e34fbda0b6d098e4e8d,
+    type: 3}
+  m_PrefabInstance: {fileID: 6891958682418933607}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &9048149511224168002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1030359897084579586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03294cd317c4b504596a9df812a58868, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &8364085089555121065 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3149728057295432910, guid: 1d9d7c4a55938e34fbda0b6d098e4e8d,

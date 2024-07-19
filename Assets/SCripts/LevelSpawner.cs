@@ -5,16 +5,28 @@ using UnityEngine;
 public class LevelSpawner : MonoBehaviour
 {
 
-    public List<GameObject> levels = new List<GameObject>();
     public float spawnOffset = 85;
-    public Vector3 nextSpawn = new Vector3(0,0,0);
-    public List<GameObject> spawnedLevels = new List<GameObject>();
+    public Vector3 nextSpawn = new Vector3(0, 0, 0);
+    public List<GameObject> activeLevels = new List<GameObject>();
     public GameObject player;
+    public List<GameObject> level0 = new List<GameObject>();
+    public List<GameObject> level1 = new List<GameObject>();
+    public List<GameObject> level2 = new List<GameObject>();
+    public List<GameObject> level3 = new List<GameObject>();
+    private List<List<GameObject>> levelList = new List<List<GameObject>>() ;
+    private GameObject levelToBeSpawned;
+    private int preLevel;
+    private List<int> wantedLevel; 
 
     // Start is called before the first frame update
     void Start()
     {
-        for(int i=0;i<4;i++)
+        wantedLevel = new List<int>() { 0,1,3};
+        levelList.Add(level0);
+        levelList.Add(level1);
+        levelList.Add(level2);
+        levelList.Add(level3);
+        for (int i=0;i<4;i++)
         {
             spawn();
         }
@@ -26,10 +38,10 @@ public class LevelSpawner : MonoBehaviour
 
 
 
-        if ( player.transform.position.z - spawnedLevels[0].transform.position.z > 85)
+        if ( player.transform.position.z - activeLevels[0].transform.position.z > 85)
         {
-            spawn();
             delete();
+            spawn();
         }
 
 
@@ -37,27 +49,53 @@ public class LevelSpawner : MonoBehaviour
 
     private void spawn()
     {
+        levelToBeSpawned = GameObjectGetter(RandomLevelGenerator());
 
-        spawnedLevels.Add(Instantiate(levels[RandomLevelGenerator()], nextSpawn,Quaternion.identity));
+       // activeLevels.Add(Instantiate(levels[RandomLevelGenerator()], nextSpawn,Quaternion.identity));
+
+        activeLevels.Add(levelToBeSpawned);
+        levelToBeSpawned.transform.position = nextSpawn;
+        levelToBeSpawned.SetActive(true);
         nextSpawn += new Vector3(0, 0, spawnOffset);
     }
 
     private void delete()
     {
-        Destroy(spawnedLevels[0]);
-        spawnedLevels.RemoveAt(0);
+        activeLevels[0].GetComponent<PlatFormDisabler>().Disabler();
+        activeLevels.RemoveAt(0);
     }
 
     int RandomLevelGenerator()
     {
-        int level = Random.Range(0,levels.Count);
-        if (level == 2)
+        int level = Random.Range(0,levelList.Count);
+        if (level == 2 )
         {
-            return Random.Range(0, levels.Count);
+            level = Random.Range(0, levelList.Count);
+            preLevel = level;
+            return level;
+        }
+        else if(level == preLevel)
+        {
+            level = wantedLevel[Random.Range(0, wantedLevel.Count)];
+            preLevel = level;
+            return level;
         }
         else
         {
+            preLevel = level;
             return level;
         }
+    }
+
+    private GameObject GameObjectGetter(int platform)
+    {
+        for(int i = 0;i < levelList[platform].Count; i++)
+        {
+            if (!levelList[platform][i].activeInHierarchy)
+            {
+                return levelList[platform][i];
+            }
+        }
+        return null;
     }
 }
